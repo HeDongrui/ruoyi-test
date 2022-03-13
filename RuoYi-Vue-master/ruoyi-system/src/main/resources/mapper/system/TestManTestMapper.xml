@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TestManTestMapper">
+
+	<resultMap type="TestManTest" id="TestManTestResult">
+		<id     property="testID"    column="testID"     />
+		<result property="testName"   column="testName"   />
+		<result property="type"   column="type"   />
+		<result property="createBy"   column="create_by"   />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy"   column="update_by"   />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<sql id="selectDictTypeVo">
+		select  testID, testName, type, create_by, create_time, update_by, update_time
+		from test
+    </sql>
+
+	<select id="selectDictTypeList" parameterType="TestManTest" resultMap="TestManTestResult">
+	    <include refid="selectDictTypeVo"/>
+		<where>
+		    <if test="testName != null and testName != ''">
+				AND testName like concat('%', #{testName}, '%')
+			</if>
+			<if test="type != null and type != ''">
+				AND type = #{type}
+			</if>
+			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+				and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+			</if>
+			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+				and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+			</if>
+	    </where>
+	</select>
+	
+	<select id="selectDictTypeAll" resultMap="TestManTestResult">
+		<include refid="selectDictTypeVo"/>
+	</select>
+	
+	<select id="selectDictTypeById" parameterType="Long" resultMap="TestManTestResult">
+		<include refid="selectDictTypeVo"/>
+		where testID = #{testId}
+	</select>
+	
+	<select id="selectDictTypeByType" parameterType="String" resultMap="TestManTestResult">
+		<include refid="selectDictTypeVo"/>
+		where dict_type = #{dictType}
+	</select>
+	
+	<select id="checkDictTypeUnique" parameterType="TestManTest" resultType="Integer">
+		select count(1) from test
+		where testID = #{testID}
+	</select>
+	
+	<delete id="deleteDictTypeById" parameterType="Long">
+ 		delete from test where testID = #{dictId}
+ 	</delete>
+ 	
+ 	<delete id="deleteDictTypeByIds" parameterType="Long">
+ 		delete from test where testID in
+ 		<foreach collection="array" item="testID" open="(" separator="," close=")">
+ 			#{testID}
+        </foreach> 
+ 	</delete>
+
+ 	<update id="updateDictType" parameterType="TestManTest">
+ 		update test
+ 		<set>
+ 			<if test="testID != null and testID != ''">testID = #{testID},</if>
+ 			<if test="testName != null and testName != ''">testName = #{testName},</if>
+ 			<if test="type != null">type = #{type},</if>
+ 			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+ 			update_time = sysdate()
+ 		</set>
+ 		where testID = #{testID}
+	</update>
+ 	
+ 	<insert id="insertDictType" parameterType="TestManTest">
+ 		insert into test(
+ 			<if test="testID != null and testID != ''">testID,</if>
+ 			<if test="testName != null and testName != ''">testName,</if>
+ 			<if test="type != null">type,</if>
+ 			<if test="createBy != null and createBy != ''">create_by,</if>
+ 			create_time
+ 		)values(
+ 			<if test="testID != null and testID != ''">#{testID},</if>
+ 			<if test="testName != null and testName != ''">#{testName},</if>
+ 			<if test="type != null">#{type},</if>
+ 			<if test="createBy != null and createBy != ''">#{createBy},</if>
+ 			sysdate()
+ 		)
+	</insert>
+	
+</mapper> 

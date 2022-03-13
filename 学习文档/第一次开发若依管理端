@@ -1,0 +1,56 @@
+第一次开发若以管理端 
+1.新建菜单 
+INSERT INTO manager.sys_menu
+    (menu_id, menu_name, parent_id, order_num, path, component,
+     query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time,
+     update_by, update_time, remark)
+     VALUES
+(5, '测试管理', 0, 5, 'testMan', null, '', 1, 0, 'M', '0', '0', '',
+ 'system', 'admin', '2022-03-13 17:29:50', '', null, '测试管理');
+
+INSERT INTO manager.sys_menu (menu_id, menu_name, parent_id, order_num, path, component,
+query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by,
+update_time, remark) VALUES
+(5001, '测试', 5, 1, 'test', 'test/test/index', '', 1, 0, 'C', '0', '0',
+'testMan:test:list', 'edit', 'admin', '2022-03-13 17:29:50', '', null, '测试菜单');
+
+INSERT INTO manager.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (5031, '测试查询', 5001, 1, '#', '', '', 1, 0, 'F', '0', '0', 'testMan:test:query', '#', 'admin', '2022-03-13 17:29:50', '', null, '');
+INSERT INTO manager.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (5032, '测试新增', 5001, 2, '#', '', '', 1, 0, 'F', '0', '0', 'testMan:test:add', '#', 'admin', '2022-03-13 17:29:50', '', null, '');
+INSERT INTO manager.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (5033, '测试修改', 5001, 3, '#', '', '', 1, 0, 'F', '0', '0', 'testMan:test:edit', '#', 'admin', '2022-03-13 17:29:50', '', null, '');
+INSERT INTO manager.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (5034, '测试删除', 5001, 4, '#', '', '', 1, 0, 'F', '0', '0', 'testMan:test:remove', '#', 'admin', '2022-03-13 17:29:50', '', null, '');
+INSERT INTO manager.sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) VALUES (5035, '测试导出', 5001, 5, '#', '', '', 1, 0, 'F', '0', '0', 'testMan:test:export', '#', 'admin', '2022-03-13 17:29:51', '', null, '');
+2.新增路由  router/index.js
+动态路由 还没找到 
+
+{
+    path: '/testMan',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'test',
+        component: () => import('@/views/testMan/test/index'),
+        name: 'Profile',
+        meta: { title: '测试', icon: 'user' }
+      }
+    ]
+  },
+
+
+
+3.修改权限 
+
+4.创建数据库 
+drop table if exists test;
+create table test (
+testID varchar(64) comment '测试编号',
+testName varchar(64) comment  '测试名称',
+type  tinyint(3) default 0 comment '测试类型',
+create_by   varchar(64)  default ''  null comment '创建者',
+create_time datetime                 null comment '创建时间',
+update_by   varchar(64)  default ''  null comment '更新者',
+update_time datetime                 null comment '更新时间'
+);
+
+5.修改引用的js
